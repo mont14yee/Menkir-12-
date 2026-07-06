@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef, useContext, createContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Hero } from './components/Hero';
@@ -10,10 +11,11 @@ import { InterfaceView } from './components/InterfaceView';
 import { DesignView } from './components/DesignView';
 import { PhotosView } from './components/PhotosView';
 import Resume from './components/Resume';
-import { Season, Currency, ExchangeRates, CurrencyContext, CurrencyContextType, View, GoalsContext, GoalsContextType, GoalNode, TimelineEvent } from './types';
+import { Season, Currency, ExchangeRates, CurrencyContext, CurrencyContextType, View, GoalsContext, GoalsContextType, GoalNode, TimelineEvent, SearchContext, SearchContextType } from './types';
 import { FeatureContent } from './constants';
 
 // --- Goals Management ---
+
 
 const initialGoals: GoalNode[] = [
     { id: 'career', name: 'Career', color: 'bg-sky-500' },
@@ -47,8 +49,12 @@ const GoalsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         localStorage.setItem('life-architect-timeline-events', JSON.stringify(timelineEvents));
     }, [timelineEvents]);
 
+    const contextValue = React.useMemo(() => ({
+        availableGoals, setAvailableGoals, orbitingGoals, setOrbitingGoals, timelineEvents, setTimelineEvents
+    }), [availableGoals, orbitingGoals, timelineEvents]);
+
     return (
-        <GoalsContext.Provider value={{ availableGoals, setAvailableGoals, orbitingGoals, setOrbitingGoals, timelineEvents, setTimelineEvents }}>
+        <GoalsContext.Provider value={contextValue}>
             {children}
         </GoalsContext.Provider>
     );
@@ -122,7 +128,7 @@ const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children })
         return `${symbol}${formatter.format(convertedAmount)}`;
     };
 
-    const contextValue: CurrencyContextType = {
+    const contextValue: CurrencyContextType = React.useMemo(() => ({
         currency,
         setCurrency,
         rates: exchangeRates,
@@ -130,7 +136,7 @@ const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children })
         formatCurrency,
         convertFromUSD,
         convertToUSD,
-    };
+    }), [currency]);
 
     return <CurrencyContext.Provider value={contextValue}>{children}</CurrencyContext.Provider>;
 };
@@ -145,11 +151,40 @@ export const useCurrency = () => {
 };
 
 
-const App: React.FC = () => {
-    const [season, setSeason] = useState<Season>(Season.Winter);
-    const [currentView, setCurrentView] = useState<View>('portfolio');
+const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [searchQuery, setSearchQuery] = useState('');
+    const contextValue = React.useMemo(() => ({ searchQuery, setSearchQuery }), [searchQuery]);
+    return (
+        <SearchContext.Provider value={contextValue}>
+            {children}
+        </SearchContext.Provider>
+    );
+};
+
+export const useSearch = () => {
+    const context = useContext(SearchContext);
+    if (!context) throw new Error('useSearch must be used within SearchProvider');
+    return context;
+};
+
+const RouteChangeListener = () => {
+    const location = useLocation();
+    const { setSearchQuery } = useSearch();
+    
+    useEffect(() => {
+        setSearchQuery('');
+    }, [location.pathname, setSearchQuery]);
+    
+    return null;
+};
+
+const AppContent: React.FC = () => {
+    const [season, setSeason] = useState<Season>(Season.Winter);
     const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const currentView = (location.pathname === '/' ? 'portfolio' : location.pathname.substring(1)) as View;
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -182,11 +217,12 @@ const App: React.FC = () => {
     }, [currentView]); // Re-run when view changes to observe new elements
     
     const handleSetView = (view: View) => {
-        if (currentView !== view) {
-            setSearchQuery(''); // Clear search when changing main views
-        }
-        setCurrentView(view);
         window.scrollTo(0, 0);
+        if (view === 'portfolio') {
+            navigate('/');
+        } else {
+            navigate(`/${view}`);
+        }
     };
 
     const seasonalClasses: Record<Season, string> = {
@@ -217,48 +253,56 @@ const App: React.FC = () => {
     );
 
     return (
-        <GoalsProvider>
-        <CurrencyProvider>
-            <div className={`relative min-h-screen bg-black overflow-x-hidden ${currentView === 'portfolio' ? 'portfolio-active' : ''}`}>
-                <div className={`absolute inset-0 transition-opacity duration-1000 ${seasonalClasses[season]}`}></div>
-                <div className="relative z-10">
-                    {currentView !== 'resume' && (
-                        <Header 
-                            setView={handleSetView} 
-                            season={season}
-                            searchQuery={searchQuery}
-                            setSearchQuery={setSearchQuery} 
-                        />
-                    )}
-                    
-                    {currentView === 'portfolio' ? (
+        <div className={`relative min-h-screen bg-black overflow-x-hidden ${currentView === 'portfolio' ? 'portfolio-active' : ''}`}>
+            <RouteChangeListener />
+            <div className={`absolute inset-0 transition-opacity duration-1000 ${seasonalClasses[season]}`}></div>
+            <div className="relative z-10">
+                {currentView !== 'resume' && (
+                    <Header 
+                        setView={handleSetView} 
+                        season={season}
+                    />
+                )}
+                
+                <Routes>
+                    <Route path="/" element={
                         <>
-                            <Portfolio searchQuery={searchQuery} setView={handleSetView} />
+                            <Portfolio setView={handleSetView} />
                             <Footer variant="portfolio" />
                         </>
-                     ) : currentView === 'interface' ? (
-                        <InterfaceView />
-                     ) : currentView === 'design' ? (
-                        <DesignView />
-                     ) : currentView === 'photos' ? (
-                        <PhotosView />
-                     ) : currentView === 'resume' ? (
-                        <Resume setView={handleSetView} />
-                     ) : <MainContent />}
+                    } />
+                    <Route path="/interface" element={<InterfaceView />} />
+                    <Route path="/design" element={<DesignView />} />
+                    <Route path="/photos" element={<PhotosView />} />
+                    <Route path="/resume" element={<Resume setView={handleSetView} />} />
+                    <Route path="/main" element={<MainContent />} />
+                </Routes>
 
-                    {/* Season Switcher for Demo */}
-                    {currentView !== 'resume' && (
-                        <div className="fixed bottom-4 right-4 z-50 bg-black/50 backdrop-blur-sm p-2 rounded-lg border border-slate-700">
-                            <div className="flex items-center space-x-2">
-                                <span className="text-xs text-slate-400">Theme:</span>
-                                <button onClick={() => setSeason(Season.Winter)} className={`w-6 h-6 rounded-full border-2 ${season === Season.Winter ? 'border-white' : 'border-transparent'} bg-blue-900 flex items-center justify-center text-white`}>❄</button>
-                                <button onClick={() => setSeason(Season.Spring)} className={`w-6 h-6 rounded-full border-2 ${season === Season.Spring ? 'border-white' : 'border-transparent'} bg-pink-300 flex items-center justify-center text-black`}>🌸</button>
-                                <button onClick={() => setSeason(Season.Fall)} className={`w-6 h-6 rounded-full border-2 ${season === Season.Fall ? 'border-white' : 'border-transparent'} bg-orange-600 flex items-center justify-center text-white`}>🍂</button>
-                            </div>
+                {/* Season Switcher for Demo */}
+                {currentView !== 'resume' && (
+                    <div className="fixed bottom-4 right-4 z-50 bg-black/50 backdrop-blur-sm p-2 rounded-lg border border-slate-700">
+                        <div className="flex items-center space-x-2">
+                            <span className="text-xs text-slate-400">Theme:</span>
+                            <button onClick={() => setSeason(Season.Winter)} className={`w-6 h-6 rounded-full border-2 ${season === Season.Winter ? 'border-white' : 'border-transparent'} bg-blue-900 flex items-center justify-center text-white`}>❄</button>
+                            <button onClick={() => setSeason(Season.Spring)} className={`w-6 h-6 rounded-full border-2 ${season === Season.Spring ? 'border-white' : 'border-transparent'} bg-pink-300 flex items-center justify-center text-black`}>🌸</button>
+                            <button onClick={() => setSeason(Season.Fall)} className={`w-6 h-6 rounded-full border-2 ${season === Season.Fall ? 'border-white' : 'border-transparent'} bg-orange-600 flex items-center justify-center text-white`}>🍂</button>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
+        </div>
+    );
+};
+
+const App: React.FC = () => {
+    return (
+        <GoalsProvider>
+        <CurrencyProvider>
+        <SearchProvider>
+            <Router>
+                <AppContent />
+            </Router>
+        </SearchProvider>
         </CurrencyProvider>
         </GoalsProvider>
     );

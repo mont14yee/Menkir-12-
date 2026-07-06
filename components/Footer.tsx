@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppStoreIcon, PlayStoreIcon, InstagramIcon, LinkedInIcon, EmailIcon, TelegramIcon, YouTubeIcon, TikTokIcon } from './IconComponents';
 
 export const Footer: React.FC<{ variant?: 'app' | 'portfolio' }> = ({ variant = 'app' }) => {
+    const [footerData, setFooterData] = useState<any>(null);
+
+    useEffect(() => {
+        fetch('/portfolio.json')
+            .then(res => res.json())
+            .then(data => {
+                if (data.footer) {
+                    setFooterData(data.footer);
+                }
+            })
+            .catch(err => console.error("Failed to load footer data:", err));
+    }, []);
     
     if (variant === 'portfolio') {
         return (
@@ -36,7 +48,7 @@ export const Footer: React.FC<{ variant?: 'app' | 'portfolio' }> = ({ variant = 
                     </div>
 
                     <div className="mt-12 border-t border-slate-800 pt-8 text-slate-500 text-xs">
-                        <p>© 2025 Menkir Wolde. All rights reserved.</p>
+                        <p>© {new Date().getFullYear()} {footerData?.copyright || 'Menkir Wolde. All rights reserved.'}</p>
                         <div className="mt-2 space-x-4">
                             <a href="#" className="hover:text-slate-300">Privacy Policy</a>
                             <span>&middot;</span>
@@ -54,8 +66,8 @@ export const Footer: React.FC<{ variant?: 'app' | 'portfolio' }> = ({ variant = 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-12 text-center md:text-left">
                     {/* CTA Section */}
                     <div className="md:col-span-5">
-                        <h3 className="text-3xl font-bold text-slate-100">Build a Legacy, One Day at a Time.</h3>
-                        <p className="mt-3 text-slate-400">Download THE FUTURE and receive the blueprint to your best year.</p>
+                        <h3 className="text-3xl font-bold text-slate-100">{footerData?.ctaTitle || 'Build a Legacy, One Day at a Time.'}</h3>
+                        <p className="mt-3 text-slate-400">{footerData?.ctaSubtitle || 'Download THE FUTURE and receive the blueprint to your best year.'}</p>
                         <div className="flex justify-center md:justify-start space-x-4 mt-6">
                             <a href="#" className="transform transition-transform hover:scale-105"><AppStoreIcon /></a>
                             <a href="#" className="transform transition-transform hover:scale-105"><PlayStoreIcon /></a>
@@ -95,7 +107,7 @@ export const Footer: React.FC<{ variant?: 'app' | 'portfolio' }> = ({ variant = 
                 </div>
 
                 <div className="mt-12 border-t border-slate-800 pt-6 text-center text-slate-500 text-sm">
-                    <p>&copy; {new Date().getFullYear()} THE FUTURE. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} {footerData?.copyright || 'THE FUTURE. All rights reserved.'}</p>
                     <div className="mt-2 space-x-4">
                         <a href="#" className="hover:text-slate-300">Privacy Policy</a>
                         <span>&middot;</span>

@@ -55,7 +55,7 @@ export const PhotosView: React.FC = () => {
                             index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
                         }`}
                     >
-                        <img
+                        <img width="1200" height="800"
                             src={photo.url}
                             alt={photo.title}
                             className="w-full h-full object-cover"
@@ -127,7 +127,7 @@ export const PhotosView: React.FC = () => {
                                 }
                             }}
                         >
-                            <img src={photo.url} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                            <img width="800" height="600" src={photo.url} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
                         </div>
                     ))}
                 </div>

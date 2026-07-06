@@ -1,20 +1,19 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Google Cloud Run Deployment
 
-# Run and deploy your AI Studio app
+This project is configured for deployment on Google Cloud Run using NGINX to serve the statically built React application.
 
-This contains everything you need to run your app locally.
+## Files added for deployment:
+- \`Dockerfile\`: A multi-stage build that first builds the React app, and then packages it with NGINX.
+- \`nginx.conf.template\`: The NGINX configuration file which sets up gzip compression, caching, SPA routing, and dynamically uses the \`PORT\` provided by Google Cloud Run.
+- \`.dockerignore\`: Helps to keep the Docker image small and the build fast by ignoring unnecessary files.
 
-View your app in AI Studio: https://ai.studio/apps/6586e0ee-7215-4153-add7-e101e7e03a6d
+## How to Deploy to Cloud Run
 
-## Run Locally
+1. Make sure you have the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) installed and authenticated.
+2. Run the following command from the root of this project:
+   \`\`\`bash
+   gcloud run deploy my-app-name --source . --region us-central1 --allow-unauthenticated
+   \`\`\`
+   This will automatically use the \`Dockerfile\` to build the container using Cloud Build and deploy it to Cloud Run.
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Enjoy your highly concurrent, lightweight React application!

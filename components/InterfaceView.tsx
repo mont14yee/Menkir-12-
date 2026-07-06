@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
-import { Activity, Droplet, Layers, Zap, ShieldCheck, BarChart3, ArrowRight, FileText, Cpu } from 'lucide-react';
+import { Activity, Droplet, Layers, Zap, ShieldCheck, BarChart3, ArrowRight, FileText, Cpu } from './ExtractedIcons';
 
 export const InterfaceView: React.FC = () => {
     const { scrollYProgress } = useScroll();

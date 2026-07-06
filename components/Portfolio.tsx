@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, MouseEvent, useMemo, useCallback } 
 import type { PortfolioData, Project, Blog, ConnectLink, Design, Video, View, Slide } from '../types';
 import { EmailIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon, ArrowPathIcon, SparklesIcon } from './IconComponents';
 import { GoogleGenAI, Modality } from '@google/genai';
+import { useSearch } from '../App';
 import { OptaScreen1, OptaScreen2, OptaScreen3, PhoneFrame } from './OptaMockups';
 import { WalletScreen1, WalletScreen2, WalletScreen3 } from './WalletMockups';
 import { LifeScreen1, LifeScreen2, LifeScreen3 } from './LifeArchitectMockups';
@@ -70,7 +71,7 @@ const Thumbnail: React.FC<{ item: Project | Blog; onClick: () => void }> = ({ it
     return (
         <div ref={ref} onClick={onClick} className="relative group flex-shrink-0 w-40 md:w-56 aspect-[2/3] bg-slate-800 rounded-md overflow-hidden cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 hover:z-20 shadow-lg hover:shadow-2xl hover:shadow-red-600/50"
             aria-label={`View details for ${item.title}`}>
-            <img src={item.poster} alt={item.title} className="w-full h-full object-cover" loading="lazy"/>
+            <img width="800" height="600" src={item.poster} alt={item.title} className="w-full h-full object-cover" loading="lazy"/>
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-3 flex flex-col justify-end">
                 <h3 className="text-white font-bold text-sm">{hoverText}</h3>
             </div>
@@ -243,7 +244,7 @@ const ProjectModal: React.FC<{
                                 <div key={index} className="w-full h-full flex-shrink-0 relative">
                                     {item.type === 'video' ? (
                                         isVideoError ? (
-                                            <img src={item.poster} alt={`${project.title} poster`} className="w-full h-full object-cover" />
+                                            <img width="800" height="600" src={item.poster} alt={`${project.title} poster`} className="w-full h-full object-cover" />
                                         ) : (
                                             <video 
                                                 ref={videoRef} 
@@ -258,7 +259,7 @@ const ProjectModal: React.FC<{
                                             />
                                         )
                                     ) : (
-                                        <img src={item.src} alt={`Project gallery image ${index}`} className={`w-full h-full object-cover ${isFeatured ? 'opacity-90' : ''}`} loading="lazy" />
+                                        <img width="800" height="600" src={item.src} alt={`Project gallery image ${index}`} className={`w-full h-full object-cover ${isFeatured ? 'opacity-90' : ''}`} loading="lazy" />
                                     )}
                                 </div>
                             ))}
@@ -327,7 +328,7 @@ const ProjectModal: React.FC<{
                                         className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-500 group/thumb ${mediaIndex === 0 ? 'border-red-600 scale-95 ring-8 ring-red-600/10' : 'border-slate-800/50 hover:border-red-500/50 opacity-80 hover:opacity-100 shadow-2xl'}`}
                                         onClick={() => setMediaIndex(0)}
                                     >
-                                        <img src={currentPoster} alt="Poster" className="w-full h-full object-cover transition-transform duration-1000 group-hover/thumb:scale-125" loading="lazy" />
+                                        <img width="800" height="600" src={currentPoster} alt="Poster" className="w-full h-full object-cover transition-transform duration-1000 group-hover/thumb:scale-125" loading="lazy" />
                                         <div className="absolute inset-0 bg-gradient-to-tr from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
                                             <button onClick={(e) => handleUploadClick(e, 0)} className="bg-white/10 backdrop-blur-xl p-3 rounded-full hover:bg-red-600 transition-colors shadow-2xl" title="Update Reel Poster">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
@@ -343,7 +344,7 @@ const ProjectModal: React.FC<{
                                             className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-500 group/thumb ${mediaIndex === idx + 1 ? 'border-red-600 scale-95 ring-8 ring-red-600/10' : 'border-slate-800/50 hover:border-red-500/50 opacity-80 hover:opacity-100 shadow-2xl'}`}
                                             onClick={() => setMediaIndex(idx + 1)}
                                         >
-                                            <img src={url} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-1000 group-hover/thumb:scale-125" loading="lazy" />
+                                            <img width="800" height="600" src={url} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-1000 group-hover/thumb:scale-125" loading="lazy" />
                                             <div className="absolute inset-0 bg-gradient-to-tr from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
                                                 <button onClick={(e) => handleUploadClick(e, idx + 1)} className="bg-white/10 backdrop-blur-xl p-3 rounded-full hover:bg-red-600 transition-colors shadow-2xl" title="Update Captured View">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
@@ -584,7 +585,7 @@ const BlogModal: React.FC<{
         <div className="fixed inset-0 bg-slate-900 z-50 modal-enter modal-enter-active" role="dialog" aria-modal="true" aria-labelledby="blog-title">
             <div className="modal-content-enter modal-content-enter-active w-full h-full overflow-y-auto" onClick={e => { if(e.target === e.currentTarget) onClose() }}>
                 <div className="relative w-full h-[50vh] bg-black flex items-center justify-center">
-                    <img src={blog.poster} alt={blog.title} className="w-full h-full object-cover opacity-60" />
+                    <img width="800" height="600" src={blog.poster} alt={blog.title} className="w-full h-full object-cover opacity-60" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
                     <button onClick={onClose} className="absolute top-6 right-6 w-10 h-10 bg-black/50 rounded-full text-white text-2xl z-10" aria-label="Close blog post">&times;</button>
                     <div className="absolute bottom-8 left-8 right-8">
@@ -783,7 +784,7 @@ const SlideshowModal: React.FC<{ slides: Slide[] | null; onClose: () => void; }>
                     <p>{errorStates[currentIndex]}</p>
                  </div>
             )}
-            {generatedImages[currentIndex] && <img src={generatedImages[currentIndex]} alt={currentSlide.title} />}
+            {generatedImages[currentIndex] && <img width="800" height="600" src={generatedImages[currentIndex]} alt={currentSlide.title} />}
         </div>
     );
     
@@ -849,7 +850,7 @@ const DesignThumbnail: React.FC<{ design: Design; onInstallClick: () => void }> 
     return (
         <div className={`design-card group ${styleClasses[design.style] || ''} cursor-pointer`} onClick={onInstallClick}>
             <div className="design-card-image-wrapper">
-                <img src={design.poster} alt={design.name} />
+                <img width="800" height="600" src={design.poster} alt={design.name} />
             </div>
             
             <div className="design-card-content">
@@ -917,20 +918,20 @@ const AppStoreModal: React.FC<{ design: Design; onClose: () => void }> = ({ desi
                 <div className="px-6 relative">
                     <div className="flex items-start gap-6">
                         {design.id === 'design4' ? (
-                            <div className="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-[#121212] shadow-2xl flex-shrink-0 border border-slate-700 flex items-center justify-center relative overflow-hidden group">
+                            <div width="112" height="112" className="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-[#121212] shadow-2xl flex-shrink-0 border border-slate-700 flex items-center justify-center relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-gradient-to-br from-[#00FF00]/10 to-transparent"></div>
                                 <span className="text-[#00FF00] text-5xl font-black italic tracking-tighter drop-shadow-[0_0_10px_rgba(0,255,0,0.5)]">O</span>
                                 <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#00FF00] animate-pulse"></div>
                             </div>
                         ) : design.id === 'design1' ? (
-                            <div className="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-slate-800 shadow-2xl flex-shrink-0 border border-slate-700 flex items-center justify-center relative overflow-hidden group">
+                            <div width="112" height="112" className="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-slate-800 shadow-2xl flex-shrink-0 border border-slate-700 flex items-center justify-center relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent"></div>
                                 <svg className="w-12 h-12 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                                 </svg>
                             </div>
                         ) : design.id === 'design2' ? (
-                            <div className="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-black shadow-[0_0_20px_rgba(220,38,38,0.3)] flex-shrink-0 border border-red-900/50 flex items-center justify-center relative overflow-hidden group">
+                            <div width="112" height="112" className="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-black shadow-[0_0_20px_rgba(220,38,38,0.3)] flex-shrink-0 border border-red-900/50 flex items-center justify-center relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/50 to-transparent opacity-50"></div>
                                 <svg className="w-12 h-12 text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)] relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v16m8-8H4" />
@@ -938,7 +939,7 @@ const AppStoreModal: React.FC<{ design: Design; onClose: () => void }> = ({ desi
                                 </svg>
                             </div>
                         ) : design.id === 'design3' ? (
-                            <div className="w-24 h-24 md:w-28 md:h-28 bg-[#1a0f08] flex-shrink-0 border-2 border-[#d4af37] flex items-center justify-center relative overflow-hidden group shadow-[0_4px_15px_rgba(0,0,0,0.8)]">
+                            <div width="112" height="112" className="w-24 h-24 md:w-28 md:h-28 bg-[#1a0f08] flex-shrink-0 border-2 border-[#d4af37] flex items-center justify-center relative overflow-hidden group shadow-[0_4px_15px_rgba(0,0,0,0.8)]">
                                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] opacity-30"></div>
                                 <svg className="w-12 h-12 text-[#d4af37] relative z-10 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -950,7 +951,7 @@ const AppStoreModal: React.FC<{ design: Design; onClose: () => void }> = ({ desi
                                 <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-[#d4af37]"></div>
                             </div>
                         ) : (
-                            <img src={design.poster} alt={design.name} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover shadow-lg flex-shrink-0 border border-slate-700/50" />
+                            <img width="112" height="112" src={design.poster} alt={design.name} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover shadow-lg flex-shrink-0 border border-slate-700/50" />
                         )}
                         <div className="flex-1 pt-1">
                             <h2 className="text-2xl font-bold tracking-tight leading-tight">{design.name}</h2>
@@ -1042,10 +1043,10 @@ const AppStoreModal: React.FC<{ design: Design; onClose: () => void }> = ({ desi
                             </>
                         ) : (
                             <>
-                                <img src={`https://picsum.photos/seed/${design.id}-1/400/711`} alt="Screenshot 1" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
-                                <img src={`https://picsum.photos/seed/${design.id}-2/400/711`} alt="Screenshot 2" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
-                                <img src={`https://picsum.photos/seed/${design.id}-3/400/711`} alt="Screenshot 3" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
-                                <img src={`https://picsum.photos/seed/${design.id}-4/400/711`} alt="Screenshot 4" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-1/400/711`} alt="Screenshot 1" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-2/400/711`} alt="Screenshot 2" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-3/400/711`} alt="Screenshot 3" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-4/400/711`} alt="Screenshot 4" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
                             </>
                         )}
                     </div>
@@ -1198,7 +1199,7 @@ const VideoThumbnail: React.FC<{
             case 'ready':
                 return (
                     <>
-                        <img src={item.thumbnail_url} alt={item.title} className="w-full h-full object-cover" loading="lazy"/>
+                        <img width="800" height="600" src={item.thumbnail_url} alt={item.title} className="w-full h-full object-cover" loading="lazy"/>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent p-3 flex flex-col justify-end">
                              <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button onClick={onPlay} className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-black/75 transition-colors" aria-label="Play video">
@@ -1217,7 +1218,7 @@ const VideoThumbnail: React.FC<{
             default:
                 return (
                     <>
-                        <img src={item.thumbnail_url} alt={item.title} className="w-full h-full object-cover brightness-50" loading="lazy"/>
+                        <img width="800" height="600" src={item.thumbnail_url} alt={item.title} className="w-full h-full object-cover brightness-50" loading="lazy"/>
                         <div className="absolute inset-0 p-3 flex flex-col items-center justify-center text-center">
                             <button onClick={onGenerate} className="bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors">
                                 Generate
@@ -1374,11 +1375,45 @@ const VideoReelModal: React.FC<{ videos: Video[]; startIndex: number; isOpen: bo
     );
 };
 
+const ParallaxHero = ({ data }: { data: PortfolioData }) => {
+    const [scrollY, setScrollY] = useState(0);
+
+    useEffect(() => {
+        const handleScroll = () => setScrollY(window.scrollY);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    return (
+        <div className="relative h-[60vh] md:h-[80vh] w-full flex flex-col justify-center items-center text-center px-4 overflow-hidden rippling-metal">
+            <video 
+                src={data.hero.videoUrl} 
+                className="absolute top-0 left-0 w-full h-full object-cover opacity-30 transition-transform duration-300 ease-out" 
+                style={{ transform: `translateY(${scrollY * 0.3}px)` }}
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+            <div className="relative z-10">
+                <h1 className="netflix-sans text-6xl md:text-9xl text-red-600 font-extrabold tracking-wider" style={{ textShadow: '0 0 15px rgba(0,0,0,0.7)' }}>
+                    {data.hero.title}
+                </h1>
+                <div className="mt-4 space-y-3">
+                    <h2 className="text-white text-3xl md:text-5xl font-bold tracking-tight">Builder: Infrastructure & Digital Product</h2>
+                    <p className="text-slate-300 text-lg md:text-xl max-w-4xl">Proven track record executing landmark African projects including the Grand Ethiopian Renaissance Dam, powered by advanced UI/UX, AI workflows development.</p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- Main Portfolio Component ---
 export const Portfolio: React.FC<{
-    searchQuery: string;
     setView: (view: View) => void;
-}> = ({ searchQuery, setView }) => {
+}> = ({ setView }) => {
+    const { searchQuery } = useSearch();
     const [data, setData] = useState<PortfolioData | null>(null);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
@@ -1387,7 +1422,6 @@ export const Portfolio: React.FC<{
     const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false);
     const [isReelOpen, setIsReelOpen] = useState(false);
     const [activeReelIndex, setActiveReelIndex] = useState(0);
-    const [scrollY, setScrollY] = useState(0);
     const [videoStates, setVideoStates] = useState<Record<string, VideoGenerationState>>({});
     const [regenerationVideo, setRegenerationVideo] = useState<Video | null>(null);
     
@@ -1407,12 +1441,6 @@ export const Portfolio: React.FC<{
             })
             .catch(err => console.error("Failed to load portfolio data:", err));
 
-        const handleScroll = () => {
-            setScrollY(window.scrollY);
-        };
-        
-        window.addEventListener('scroll', handleScroll);
-        
         const originalTitle = document.title;
         const originalDescription = document.querySelector('meta[name="description"]');
         const originalDescriptionContent = originalDescription ? originalDescription.getAttribute('content') : '';
@@ -1424,7 +1452,6 @@ export const Portfolio: React.FC<{
         document.head.appendChild(metaDescription);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
             document.title = originalTitle;
             const currentMeta = document.querySelector('meta[name="description"]');
             if (currentMeta) {
@@ -1608,27 +1635,7 @@ export const Portfolio: React.FC<{
     return (
         <div className="min-h-screen overflow-y-auto">
             {/* Hero Section */}
-            <div className="relative h-[60vh] md:h-[80vh] w-full flex flex-col justify-center items-center text-center px-4 overflow-hidden rippling-metal">
-                <video 
-                    src={data.hero.videoUrl} 
-                    className="absolute top-0 left-0 w-full h-full object-cover opacity-30 transition-transform duration-300 ease-out" 
-                    style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                <div className="relative z-10">
-                    <h1 className="netflix-sans text-6xl md:text-9xl text-red-600 font-extrabold tracking-wider" style={{ textShadow: '0 0 15px rgba(0,0,0,0.7)' }}>
-                        {data.hero.title}
-                    </h1>
-                    <div className="mt-4 space-y-3">
-                        <h2 className="text-white text-3xl md:text-5xl font-bold tracking-tight">Builder: Infrastructure & Digital Product</h2>
-                        <p className="text-slate-300 text-lg md:text-xl max-w-4xl">Proven track record executing landmark African projects including the Grand Ethiopian Renaissance Dam, powered by advanced UI/UX, AI workflows development.</p>
-                    </div>
-                </div>
-            </div>
+            <ParallaxHero data={data} />
 
             <main className="py-12 -mt-24 relative z-10">
                 <div className="px-4 md:px-12 mb-8 max-w-3xl">

@@ -1,10 +1,22 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NeuralNetworkIcon, PaletteIcon, TrophyIcon } from './IconComponents';
 
 export const Hero: React.FC = () => {
     const [isSparkVisible, setIsSparkVisible] = useState(false);
     const [goal, setGoal] = useState('');
+    const [heroData, setHeroData] = useState<any>(null);
+
+    useEffect(() => {
+        fetch('/portfolio.json')
+            .then(res => res.json())
+            .then(data => {
+                if (data.hero) {
+                    setHeroData(data.hero);
+                }
+            })
+            .catch(err => console.error("Failed to load hero data:", err));
+    }, []);
 
     const handleGeneratePreview = () => {
         const section = document.getElementById('yearly-goals-doorway');
@@ -21,10 +33,10 @@ export const Hero: React.FC = () => {
             
             <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-4 animate-hologram">
-                    THE FUTURE<span className="text-slate-400">: Your Future, Designed.</span>
+                    {heroData?.title || 'THE FUTURE'}<span className="text-slate-400">: {heroData?.subtitle || 'Your Future, Designed.'}</span>
                 </h1>
                 <p className="text-lg md:text-xl max-w-3xl mx-auto text-slate-300 leading-relaxed mb-10 animate-fade-in-up">
-                    Move beyond planning. Architect a year of purpose, achievement, and growth.
+                    {heroData?.description || 'Move beyond planning. Architect a year of purpose, achievement, and growth.'}
                 </p>
 
                 <div 
@@ -34,7 +46,7 @@ export const Hero: React.FC = () => {
                 >
                     <div className={`transition-all duration-500 ease-in-out ${isSparkVisible ? 'opacity-0 -translate-y-4' : 'opacity-100'}`}>
                         <div className="bg-white text-black font-bold text-lg py-3 px-8 rounded-full glow-pulse cursor-pointer">
-                            Begin Your Blueprint &rarr;
+                            {heroData?.cta || 'Begin Your Blueprint &rarr;'}
                         </div>
                     </div>
                     <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out ${isSparkVisible ? 'opacity-100' : 'opacity-0 translate-y-4'}`}>
@@ -42,7 +54,7 @@ export const Hero: React.FC = () => {
                             type="text"
                             value={goal}
                             onChange={(e) => setGoal(e.target.value)}
-                            placeholder="Launch my podcast..."
+                            placeholder={heroData?.inputPlaceholder || 'Launch my podcast...'}
                             className="bg-gray-900 border border-slate-700 rounded-full py-3 px-6 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-500 w-64 md:w-80"
                             aria-label="Enter your primary goal"
                         />
@@ -50,7 +62,7 @@ export const Hero: React.FC = () => {
                             onClick={handleGeneratePreview}
                             className="ml-2 bg-slate-200 text-black font-bold py-3 px-6 rounded-full hover:bg-white transition-colors transform hover:scale-105"
                         >
-                            Generate
+                            {heroData?.buttonText || 'Generate'}
                         </button>
                     </div>
                 </div>

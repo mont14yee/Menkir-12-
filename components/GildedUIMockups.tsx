@@ -87,7 +87,7 @@ export const GildedScreen3: React.FC = () => (
         <div className="flex flex-col gap-5 relative z-10">
             <div className="bg-[#120a06] p-2 border border-[#d4af37]/30 shadow-[0_8px_20px_rgba(0,0,0,0.8),0_0_10px_rgba(212,175,55,0.1)] group cursor-pointer">
                 <div className="w-full aspect-video bg-[#24150d] border border-[#523A1D] flex items-center justify-center relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=400&auto=format&fit=crop" alt="Painting 1" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                    <img width="800" height="600" src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=400&auto=format&fit=crop" alt="Painting 1" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                     <div className="absolute inset-0 border-[3px] border-[#d4af37]/60 pointer-events-none m-1"></div>
                 </div>
                 <div className="mt-2 text-center">
@@ -98,7 +98,7 @@ export const GildedScreen3: React.FC = () => (
 
             <div className="bg-[#120a06] p-2 border border-[#d4af37]/30 shadow-[0_8px_20px_rgba(0,0,0,0.8),0_0_10px_rgba(212,175,55,0.1)] group cursor-pointer">
                 <div className="w-full aspect-video bg-[#24150d] border border-[#523A1D] flex items-center justify-center relative overflow-hidden">
-                     <img src="https://images.unsplash.com/photo-1578301978693-85fa9c03fa75?q=80&w=400&auto=format&fit=crop" alt="Painting 2" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity grayscale opacity-60 sepia" />
+                     <img width="800" height="600" src="https://images.unsplash.com/photo-1578301978693-85fa9c03fa75?q=80&w=400&auto=format&fit=crop" alt="Painting 2" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity grayscale opacity-60 sepia" />
                      <div className="absolute inset-0 border-[3px] border-[#d4af37]/60 pointer-events-none m-1"></div>
                 </div>
                 <div className="mt-2 text-center">

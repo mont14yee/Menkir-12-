@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ShieldCheck, Target, Leaf, Map, Activity, Layers, ArrowRight, CheckCircle2, AlertTriangle, Info, ChevronRight, BarChart3, Droplet } from 'lucide-react';
+import { ShieldCheck, Target, Leaf, Map, Activity, Layers, ArrowRight, CheckCircle2, Info, BarChart3, Droplet } from './ExtractedIcons';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const trafficData = [
@@ -37,7 +37,7 @@ export const DesignView: React.FC = () => {
                 >
                     {/* Simulated 3D Render / Sunset Background */}
                     <div className="absolute inset-0 bg-gradient-to-b from-amber-900/40 via-slate-900/80 to-[#0f1115] mix-blend-multiply z-10" />
-                    <img 
+                    <img width="800" height="600" 
                         src="https://images.unsplash.com/photo-1545042746-ec9e5a59b359?q=80&w=2574&auto=format&fit=crop" 
                         alt="Interchange at sunset" 
                         className="w-full h-full object-cover opacity-60"
@@ -393,7 +393,7 @@ export const DesignView: React.FC = () => {
             {/* 7. Economic Appraisal & Conclusion */}
             <section className="relative py-32 px-6 overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <img 
+                    <img width="800" height="600" 
                         src="https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=2670&auto=format&fit=crop" 
                         alt="Completed project" 
                         className="w-full h-full object-cover opacity-30"

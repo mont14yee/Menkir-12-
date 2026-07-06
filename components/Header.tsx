@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, DragEvent, FC, MouseEvent, ChangeEv
 import { GearIcon, CheckCircleIcon, HammerWandIcon, MapPinIcon, GlobeAltIcon, ArrowLongRightIcon, EnvelopeIcon, HeartIcon, UsersIcon, ArrowPathIcon, SparklesIcon, MenuIcon, CloseIcon, SearchIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon } from './IconComponents';
 import type { View, ProfileData, ConnectLink } from '../types';
 import { Season } from '../types';
+import { useSearch } from '../App';
 
 // --- Custom Hooks ---
 const useCountUp = (end: number, duration = 1500) => {
@@ -151,7 +152,7 @@ const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }
                                        <GearIcon size={160} />
                                    </div>
                                    <div className="absolute w-20 h-20 rounded-full overflow-hidden border-2 border-slate-700 bg-black shadow-[0_0_20px_rgba(229,9,20,0.4)]">
-                                       <img src={profilePic || '/profile.jpg'} alt="Menkir Wolde" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                       <img src={profilePic || '/profile.jpg'} alt="Menkir Wolde" className="w-full h-full object-cover" referrerPolicy="no-referrer" width="80" height="80" />
                                    </div>
                                </div>
                            )}
@@ -165,7 +166,7 @@ const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }
                             {/* Header */}
                             <div className="text-center mb-6 flex-shrink-0">
                                 <div onClick={handleProfilePicClick} onDragOver={handleDragOver} onDrop={handleDrop} className="profile-pic-glow relative w-32 h-32 mx-auto rounded-full border-4 border-slate-700 shadow-lg group cursor-pointer" title="Click or drag & drop an image">
-                                    <img src={profilePic} alt="Menkir Wolde" className="w-full h-full object-cover rounded-full" />
+                                    <img src={profilePic} alt="Menkir Wolde" className="w-full h-full object-cover rounded-full" width="128" height="128" />
                                     <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
                                     <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
                                         <p className="text-xs font-bold">Change</p>
@@ -281,10 +282,9 @@ const SidebarLink: FC<{ href?: string; onClick?: () => void; children: React.Rea
 // --- Header Component ---
 export const Header: React.FC<{ 
     setView: (view: View) => void, 
-    season: Season,
-    searchQuery: string,
-    setSearchQuery: (query: string) => void 
-}> = ({ setView, season, searchQuery, setSearchQuery }) => {
+    season: Season 
+}> = ({ setView, season }) => {
+    const { searchQuery, setSearchQuery } = useSearch();
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
     const [connectLinks, setConnectLinks] = useState<ConnectLink[]>([]);
@@ -414,7 +414,7 @@ export const Header: React.FC<{
                                 </span>
                                 {/* Inner profile image embedded into the gear */}
                                 <div className={`w-4 h-4 rounded-full overflow-hidden border border-slate-700 group-hover:border-red-500 transition-all duration-300 ${isSettingsModalOpen ? 'scale-110 border-red-500' : ''}`}>
-                                    <img 
+                                    <img width="16" height="16" 
                                         src={profilePic || '/profile.jpg'} 
                                         alt="Menkir Wolde" 
                                         className="w-full h-full object-cover" 
@@ -433,7 +433,7 @@ export const Header: React.FC<{
                                 <div className="flex flex-col items-center text-center">
                                     {/* Large profile picture */}
                                     <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-slate-700 shadow-md mb-3">
-                                        <img 
+                                        <img width="96" height="96" 
                                             src={profilePic || '/profile.jpg'} 
                                             alt="Menkir Wolde" 
                                             className="w-full h-full object-cover"

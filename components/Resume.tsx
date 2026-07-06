@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Briefcase, Award, GraduationCap, Mail, MapPin, Phone, ChevronRight, ExternalLink, Menu, X, ArrowLeft } from 'lucide-react';
+import { User, Briefcase, Award, GraduationCap, Mail, MapPin, Phone, ChevronRight, Menu, X, ArrowLeft } from './ExtractedIcons';
 import { View } from '../types';
 
 interface ResumeProps {

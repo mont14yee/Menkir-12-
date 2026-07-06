@@ -154,8 +154,27 @@ export interface Video {
   quip: string;
 }
 
+export type SearchContextType = {
+    searchQuery: string;
+    setSearchQuery: (q: string) => void;
+};
+export const SearchContext = createContext<SearchContextType | undefined>(undefined);
+
 export interface PortfolioData {
-  hero: { title: string; videoUrl: string; };
+  hero: {
+    title: string;
+    subtitle?: string;
+    description?: string;
+    cta?: string;
+    inputPlaceholder?: string;
+    buttonText?: string;
+    videoUrl?: string;
+  };
+  footer?: {
+    ctaTitle: string;
+    ctaSubtitle: string;
+    copyright: string;
+  };
   featured: string[];
   featured_designs: string[];
   projects: Project[];
