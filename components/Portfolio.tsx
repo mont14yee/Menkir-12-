@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, MouseEvent, useMemo, useCallback } from 'react';
 import type { PortfolioData, Project, Blog, ConnectLink, Design, Video, View, Slide } from '../types';
 import { EmailIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon, ArrowPathIcon, SparklesIcon } from './IconComponents';
-import { GoogleGenAI, Modality } from '@google/genai';
+import { Modality } from '@google/genai';
+import { generateContent, generateVideos, getVideosOperation, getVideoGenerationResult, downloadVideo } from '../gemini-client';
 import { useSearch } from '../App';
 import { OptaScreen1, OptaScreen2, OptaScreen3, PhoneFrame } from './OptaMockups';
 import { WalletScreen1, WalletScreen2, WalletScreen3 } from './WalletMockups';
@@ -244,7 +245,7 @@ const ProjectModal: React.FC<{
                                 <div key={index} className="w-full h-full flex-shrink-0 relative">
                                     {item.type === 'video' ? (
                                         isVideoError ? (
-                                            <img width="800" height="600" src={item.poster} alt={`${project.title} poster`} className="w-full h-full object-cover" />
+                                            <img width="800" height="600" src={item.poster} alt={`${project.title} poster`} className="w-full h-full object-cover" loading="lazy" />
                                         ) : (
                                             <video 
                                                 ref={videoRef} 
@@ -585,7 +586,7 @@ const BlogModal: React.FC<{
         <div className="fixed inset-0 bg-slate-900 z-50 modal-enter modal-enter-active" role="dialog" aria-modal="true" aria-labelledby="blog-title">
             <div className="modal-content-enter modal-content-enter-active w-full h-full overflow-y-auto" onClick={e => { if(e.target === e.currentTarget) onClose() }}>
                 <div className="relative w-full h-[50vh] bg-black flex items-center justify-center">
-                    <img width="800" height="600" src={blog.poster} alt={blog.title} className="w-full h-full object-cover opacity-60" />
+                    <img width="800" height="600" src={blog.poster} alt={blog.title} className="w-full h-full object-cover opacity-60" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
                     <button onClick={onClose} className="absolute top-6 right-6 w-10 h-10 bg-black/50 rounded-full text-white text-2xl z-10" aria-label="Close blog post">&times;</button>
                     <div className="absolute bottom-8 left-8 right-8">
@@ -669,8 +670,6 @@ const SlideshowModal: React.FC<{ slides: Slide[] | null; onClose: () => void; }>
     const [errorStates, setErrorStates] = useState<Record<number, string | null>>({});
     const [slideDirection, setSlideDirection] = useState<'next' | 'prev' | 'none'>('none');
     
-    const ai = useMemo(() => new GoogleGenAI({ apiKey: process.env.API_KEY as string }), []);
-    
     const generateImage = useCallback(async (index: number, slide: Slide) => {
         if (generatedImages[index] || loadingStates[index]) return;
 
@@ -685,7 +684,7 @@ const SlideshowModal: React.FC<{ slides: Slide[] | null; onClose: () => void; }>
         setErrorStates(prev => ({ ...prev, [index]: null }));
 
         try {
-            const response = await ai.models.generateContent({
+            const response = await generateContent({
                 model: 'gemini-2.5-flash-image',
                 contents: { parts: [{ text: slide.image_prompt }] },
                 config: { responseModalities: [Modality.IMAGE] },
@@ -705,7 +704,7 @@ const SlideshowModal: React.FC<{ slides: Slide[] | null; onClose: () => void; }>
         } finally {
             setLoadingStates(prev => ({ ...prev, [index]: false }));
         }
-    }, [ai, generatedImages, loadingStates]);
+    }, [generatedImages, loadingStates]);
     
     useEffect(() => {
         if (slides) {
@@ -784,7 +783,7 @@ const SlideshowModal: React.FC<{ slides: Slide[] | null; onClose: () => void; }>
                     <p>{errorStates[currentIndex]}</p>
                  </div>
             )}
-            {generatedImages[currentIndex] && <img width="800" height="600" src={generatedImages[currentIndex]} alt={currentSlide.title} />}
+            {generatedImages[currentIndex] && <img width="800" height="600" src={generatedImages[currentIndex]} alt={currentSlide.title} loading="lazy" />}
         </div>
     );
     
@@ -850,7 +849,7 @@ const DesignThumbnail: React.FC<{ design: Design; onInstallClick: () => void }> 
     return (
         <div className={`design-card group ${styleClasses[design.style] || ''} cursor-pointer`} onClick={onInstallClick}>
             <div className="design-card-image-wrapper">
-                <img width="800" height="600" src={design.poster} alt={design.name} />
+                <img width="800" height="600" src={design.poster} alt={design.name} loading="lazy" />
             </div>
             
             <div className="design-card-content">
@@ -951,7 +950,7 @@ const AppStoreModal: React.FC<{ design: Design; onClose: () => void }> = ({ desi
                                 <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-[#d4af37]"></div>
                             </div>
                         ) : (
-                            <img width="112" height="112" src={design.poster} alt={design.name} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover shadow-lg flex-shrink-0 border border-slate-700/50" />
+                            <img width="112" height="112" src={design.poster} alt={design.name} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover shadow-lg flex-shrink-0 border border-slate-700/50" loading="lazy" />
                         )}
                         <div className="flex-1 pt-1">
                             <h2 className="text-2xl font-bold tracking-tight leading-tight">{design.name}</h2>
@@ -1043,10 +1042,10 @@ const AppStoreModal: React.FC<{ design: Design; onClose: () => void }> = ({ desi
                             </>
                         ) : (
                             <>
-                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-1/400/711`} alt="Screenshot 1" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
-                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-2/400/711`} alt="Screenshot 2" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
-                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-3/400/711`} alt="Screenshot 3" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
-                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-4/400/711`} alt="Screenshot 4" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-1/400/711`} alt="Screenshot 1" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" loading="lazy" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-2/400/711`} alt="Screenshot 2" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" loading="lazy" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-3/400/711`} alt="Screenshot 3" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" loading="lazy" />
+                                <img width="400" height="711" src={`https://picsum.photos/seed/${design.id}-4/400/711`} alt="Screenshot 4" className="w-[140px] md:w-[180px] aspect-[9/16] object-cover rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-slate-800/50" loading="lazy" />
                             </>
                         )}
                     </div>
@@ -1500,10 +1499,9 @@ export const Portfolio: React.FC<{
         setVideoStates(prev => ({ ...prev, [video.id]: { status: 'generating', message: 'Initializing generator...' } }));
 
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
             const promptToUse = promptOverride || video.prompt;
 
-            let operation = await ai.models.generateVideos({
+            let operation = await generateVideos({
                 model: 'veo-3.1-fast-generate-preview',
                 prompt: promptToUse,
                 config: {
@@ -1525,7 +1523,7 @@ export const Portfolio: React.FC<{
                 setVideoStates(prev => ({ ...prev, [video.id]: { status: 'generating', message: loadingMessages[messageIndex % loadingMessages.length] }}));
                 messageIndex++;
                 await new Promise(resolve => setTimeout(resolve, 10000));
-                operation = await ai.operations.getVideosOperation({ operation });
+                operation = await getVideosOperation({ operation });
             }
 
             // @ts-ignore
@@ -1534,10 +1532,7 @@ export const Portfolio: React.FC<{
             const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
             if (!downloadLink) { throw new Error("Video generation succeeded but no download link was provided."); }
 
-            const videoResponse = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
-            if (!videoResponse.ok) { throw new Error(`Failed to download video: ${videoResponse.statusText}`); }
-            
-            const videoBlob = await videoResponse.blob();
+            const videoBlob = await downloadVideo(downloadLink);
             const videoUrl = URL.createObjectURL(videoBlob);
             
             setVideoStates(prev => ({ ...prev, [video.id]: { status: 'ready', url: videoUrl } }));

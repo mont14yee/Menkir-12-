@@ -40,8 +40,7 @@ export const DesignView: React.FC = () => {
                     <img width="800" height="600" 
                         src="https://images.unsplash.com/photo-1545042746-ec9e5a59b359?q=80&w=2574&auto=format&fit=crop" 
                         alt="Interchange at sunset" 
-                        className="w-full h-full object-cover opacity-60"
-                    />
+                        className="w-full h-full object-cover opacity-60" loading="lazy" />
                     {/* Overlay Grid */}
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] z-10" />
                 </motion.div>
@@ -396,8 +395,7 @@ export const DesignView: React.FC = () => {
                     <img width="800" height="600" 
                         src="https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=2670&auto=format&fit=crop" 
                         alt="Completed project" 
-                        className="w-full h-full object-cover opacity-30"
-                    />
+                        className="w-full h-full object-cover opacity-30" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0f1115] via-[#0f1115]/80 to-transparent" />
                 </div>
 

@@ -127,7 +127,7 @@ export const PhotosView: React.FC = () => {
                                 }
                             }}
                         >
-                            <img width="800" height="600" src={photo.url} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                            <img width="800" height="600" src={photo.url} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
                         </div>
                     ))}
                 </div>

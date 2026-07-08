@@ -5,7 +5,8 @@ import {
     AppStoreIcon, PlayStoreIcon, GearIcon, GoalIcon, TimelineIcon, BudgetIcon, PlannerIcon, DreamIcon, EventIcon, VisionBoardIcon, SelfCareIcon, ReviewIcon, NotesIcon, ReadingIcon
 } from './components/IconComponents';
 import { useState, useEffect, DragEvent, useMemo, useRef, MouseEvent, FormEvent, useCallback } from 'react';
-import { GoogleGenAI, Type } from "@google/genai";
+import { Type } from "@google/genai";
+import { generateContent, generateContentStream } from './gemini-client';
 import { useCurrency, useGoals } from './App';
 import type { Currency, GoalNode, SmartPlan, TimelineEvent } from './types';
 
@@ -16,7 +17,7 @@ const YearlyGoalsVisual = () => {
     const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     
-    const ai = useMemo(() => new GoogleGenAI({ apiKey: process.env.API_KEY as string }), []);
+    
 
     const getRandomColor = () => {
         const colors = ['bg-rose-500', 'bg-amber-500', 'bg-violet-500', 'bg-fuchsia-500', 'bg-cyan-500', 'bg-lime-500'];
@@ -61,7 +62,7 @@ const YearlyGoalsVisual = () => {
         try {
             const prompt = `Generate a concise SMART (Specific, Measurable, Achievable, Relevant, Time-bound) goal breakdown for: "${goal.name}". Ensure each section is 1 short sentence.`;
             
-            const response = await ai.models.generateContent({
+            const response = await generateContent({
                 model: "gemini-2.5-flash",
                 contents: prompt,
                 config: {
@@ -467,7 +468,7 @@ const BudgetAlchemyVisual = () => {
     const [error, setError] = useState('');
     const [whatIf, setWhatIf] = useState({ savingsBoost: 0 }); // In USD
 
-    const ai = useMemo(() => new GoogleGenAI({ apiKey: process.env.API_KEY as string }), []);
+    
 
     const handleAddItem = (category: 'expenses.fixed' | 'expenses.variable' | 'debts' | 'savings' | 'goals') => {
         const id = Date.now();
@@ -549,7 +550,7 @@ const BudgetAlchemyVisual = () => {
         `;
 
         try {
-            const stream = await ai.models.generateContentStream({
+            const stream = await generateContentStream({
                 model: "gemini-2.5-flash",
                 contents: prompt,
             });
@@ -929,7 +930,7 @@ const DreamInventoryVisual = () => {
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 w-full mx-auto z-10 flex-grow">
                 {dreams.map(dream => (
                      <div key={dream.id} className={`dream-card group relative aspect-[3/4] rounded-lg shadow-lg overflow-hidden border-2 border-slate-800/50 transition-all duration-300 hover:border-indigo-500/80 hover:shadow-indigo-500/20 hover:shadow-2xl hover:scale-105 ${dream.isNew ? 'is-new' : ''}`}>
-                        <img src={dream.image} alt={dream.text} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"/>
+                        <img src={dream.image} alt={dream.text} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110" loading="lazy" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                         <div className="absolute bottom-0 left-0 right-0 p-3 text-white flex items-end justify-between gap-2">
                             <h4 className="font-bold text-sm leading-tight flex-grow">{dream.text}</h4>
@@ -1208,7 +1209,7 @@ const VisionBoardVisual = () => {
                                 setDragging({ id: vision.id, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top });
                             }}
                         >
-                             <img src={vision.src} alt="Vision" className="absolute w-full h-full object-cover"/>
+                             <img src={vision.src} alt="Vision" className="absolute w-full h-full object-cover" loading="lazy" />
                         </div>
                     );
                 })}
@@ -1398,7 +1399,7 @@ const YearlyReviewVisual = () => {
         { id: 4, text: "Postponed learning guitar", type: 'trail' },
     ];
 
-    const ai = useMemo(() => new GoogleGenAI({ apiKey: process.env.API_KEY as string }), []);
+    
     const [view, setView] = useState<View>('reflection');
     const [reflections, setReflections] = useState<Reflection[]>(initialReflections);
     const [userInput, setUserInput] = useState('');
@@ -1467,7 +1468,7 @@ const YearlyReviewVisual = () => {
         `;
 
         try {
-            const stream = await ai.models.generateContentStream({
+            const stream = await generateContentStream({
                 model: "gemini-2.5-flash",
                 contents: prompt,
             });
@@ -1784,7 +1785,7 @@ const NotesNexusVisual = () => {
                         </div>
                         {note.media && (
                             <div className="mb-2 h-24 rounded-md overflow-hidden bg-black/30">
-                                {note.media.type === 'image' && <img src={note.media.content} alt={note.text} className="w-full h-full object-cover" />}
+                                {note.media.type === 'image' && <img src={note.media.content} alt={note.text} className="w-full h-full object-cover" loading="lazy" />}
                                 {note.media.type === 'sketch' && <div className="w-full h-full p-1" dangerouslySetInnerHTML={{ __html: note.media.content }} />}
                             </div>
                         )}
@@ -1841,7 +1842,7 @@ const ReadingListVisual = () => {
     const [fetchedBook, setFetchedBook] = useState<{ title: string; author: string; affinity: string; } | null>(null);
     const [fetchError, setFetchError] = useState('');
 
-    const ai = useMemo(() => new GoogleGenAI({ apiKey: process.env.API_KEY as string }), []);
+    
 
     const handleProgressChange = (id: number, newProgress: number) => {
         setBooks(prev => prev.map(book => {
@@ -1886,7 +1887,7 @@ const ReadingListVisual = () => {
         `;
         
         try {
-            const response = await ai.models.generateContent({
+            const response = await generateContent({
                 model: "gemini-2.5-flash",
                 contents: prompt,
                 config: {
@@ -1964,7 +1965,7 @@ const ReadingListVisual = () => {
                             style={{ transform, zIndex, boxShadow: '0 10px 20px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.5)' }}
                             onClick={() => setActiveIndex(i)}
                         >
-                            <img src={book.cover} alt={book.title} className={`w-full h-full object-cover rounded-lg transition-all duration-300 ${isActive ? 'brightness-100' : 'brightness-75'}`} />
+                            <img src={book.cover} alt={book.title} className={`w-full h-full object-cover rounded-lg transition-all duration-300 ${isActive ? 'brightness-100' : 'brightness-75'}`} loading="lazy" />
                         </div>
                     );
                 })}
@@ -2028,7 +2029,7 @@ const ReadingListVisual = () => {
                 <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center" onClick={cancelAddBook}>
                     <div className="active-tome-oracle bg-slate-900 border border-slate-700 rounded-xl p-6 w-11/12 max-w-sm text-center" onClick={e => e.stopPropagation()}>
                         <h3 className="text-lg font-bold text-slate-200 mb-2">Is this your tome?</h3>
-                        <img src={`https://picsum.photos/seed/${fetchedBook.title.toLowerCase().replace(/\s/g, '-')}/400/600`} alt={fetchedBook.title} className="w-24 h-36 object-cover rounded-md mx-auto mb-4 shadow-lg" />
+                        <img src={`https://picsum.photos/seed/${fetchedBook.title.toLowerCase().replace(/\s/g, '-')}/400/600`} alt={fetchedBook.title} className="w-24 h-36 object-cover rounded-md mx-auto mb-4 shadow-lg" loading="lazy" />
                         <p className="font-bold text-white">{fetchedBook.title}</p>
                         <p className="text-sm text-slate-400">by {fetchedBook.author}</p>
                         <p className="text-xs text-slate-500 mt-2">Suggested Affinity: <span className="bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">{fetchedBook.affinity}</span></p>

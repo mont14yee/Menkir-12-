@@ -152,7 +152,7 @@ const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }
                                        <GearIcon size={160} />
                                    </div>
                                    <div className="absolute w-20 h-20 rounded-full overflow-hidden border-2 border-slate-700 bg-black shadow-[0_0_20px_rgba(229,9,20,0.4)]">
-                                       <img src={profilePic || '/profile.jpg'} alt="Menkir Wolde" className="w-full h-full object-cover" referrerPolicy="no-referrer" width="80" height="80" />
+                                       <img src={profilePic || '/profile.webp'} alt="Menkir Wolde" className="w-full h-full object-cover" referrerPolicy="no-referrer" width="80" height="80" />
                                    </div>
                                </div>
                            )}
@@ -415,7 +415,7 @@ export const Header: React.FC<{
                                 {/* Inner profile image embedded into the gear */}
                                 <div className={`w-4 h-4 rounded-full overflow-hidden border border-slate-700 group-hover:border-red-500 transition-all duration-300 ${isSettingsModalOpen ? 'scale-110 border-red-500' : ''}`}>
                                     <img width="16" height="16" 
-                                        src={profilePic || '/profile.jpg'} 
+                                        src={profilePic || '/profile.webp'} 
                                         alt="Menkir Wolde" 
                                         className="w-full h-full object-cover" 
                                         referrerPolicy="no-referrer"
@@ -434,7 +434,7 @@ export const Header: React.FC<{
                                     {/* Large profile picture */}
                                     <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-slate-700 shadow-md mb-3">
                                         <img width="96" height="96" 
-                                            src={profilePic || '/profile.jpg'} 
+                                            src={profilePic || '/profile.webp'} 
                                             alt="Menkir Wolde" 
                                             className="w-full h-full object-cover"
                                             referrerPolicy="no-referrer"

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef, useContext, createContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, createContext, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -7,10 +7,10 @@ import { Hero } from './components/Hero';
 import { FeatureSection } from './components/FeatureSection';
 import { FinalCTA } from './components/FinalCTA';
 import { Portfolio } from './components/Portfolio';
-import { InterfaceView } from './components/InterfaceView';
-import { DesignView } from './components/DesignView';
-import { PhotosView } from './components/PhotosView';
-import Resume from './components/Resume';
+const InterfaceView = lazy(() => import('./components/InterfaceView').then(m => ({ default: m.InterfaceView })));
+const DesignView = lazy(() => import('./components/DesignView').then(m => ({ default: m.DesignView })));
+const PhotosView = lazy(() => import('./components/PhotosView').then(m => ({ default: m.PhotosView })));
+const Resume = lazy(() => import('./components/Resume'));
 import { Season, Currency, ExchangeRates, CurrencyContext, CurrencyContextType, View, GoalsContext, GoalsContextType, GoalNode, TimelineEvent, SearchContext, SearchContextType } from './types';
 import { FeatureContent } from './constants';
 
@@ -264,19 +264,21 @@ const AppContent: React.FC = () => {
                     />
                 )}
                 
-                <Routes>
-                    <Route path="/" element={
-                        <>
-                            <Portfolio setView={handleSetView} />
-                            <Footer variant="portfolio" />
-                        </>
-                    } />
-                    <Route path="/interface" element={<InterfaceView />} />
-                    <Route path="/design" element={<DesignView />} />
-                    <Route path="/photos" element={<PhotosView />} />
-                    <Route path="/resume" element={<Resume setView={handleSetView} />} />
-                    <Route path="/main" element={<MainContent />} />
-                </Routes>
+                <Suspense fallback={<div className="min-h-screen w-full bg-black" />}>
+                    <Routes>
+                        <Route path="/" element={
+                            <>
+                                <Portfolio setView={handleSetView} />
+                                <Footer variant="portfolio" />
+                            </>
+                        } />
+                        <Route path="/interface" element={<InterfaceView />} />
+                        <Route path="/design" element={<DesignView />} />
+                        <Route path="/photos" element={<PhotosView />} />
+                        <Route path="/resume" element={<Resume setView={handleSetView} />} />
+                        <Route path="/main" element={<MainContent />} />
+                    </Routes>
+                </Suspense>
 
                 {/* Season Switcher for Demo */}
                 {currentView !== 'resume' && (

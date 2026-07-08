@@ -25,21 +25,7 @@ const Resume: React.FC<ResumeProps> = ({ setView }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          animation: fadeInUp 0.5s ease-out forwards;
-        }
-      `}</style>
+      
 
       {/* Sticky Navigation */}
       <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-slate-100">
