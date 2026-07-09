@@ -1,12 +1,14 @@
 import express from 'express';
+import compression from 'compression';
 import path from 'path';
-import { createServer as createViteServer } from 'vite';
+
 import { GoogleGenAI } from '@google/genai';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3000;
 
+  app.use(compression());
   app.use(express.json());
 
   // API endpoint for Gemini
@@ -77,6 +79,7 @@ async function startServer() {
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -84,8 +87,14 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.use(express.static(distPath, {
+      setHeaders: (res, filePath) => {
+        if (filePath.includes('/assets/')) {
+          res.setHeader('Cache-Control', 'public, max-age=15552000');
+        }
+      }
+    }));
+    app.get('*all', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

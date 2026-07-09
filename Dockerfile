@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies (using npm ci for a cleaner install if possible, else npm install)
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the application source code
 COPY . .
@@ -16,24 +16,27 @@ COPY . .
 # Build the application for production
 RUN npm run build
 
-# Stage 2: Serve the application with NGINX
-FROM nginx:alpine
+# Stage 2: Serve the application with Node.js
+FROM node:18-alpine
 
-# Set default port for Cloud Run (Cloud Run sets the PORT env var)
-ENV PORT=8080
+# Set working directory
+WORKDIR /app
 
-# Remove default NGINX configuration
-RUN rm /etc/nginx/conf.d/default.conf
+# Set Node environment to production
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Copy the NGINX configuration template
-# NGINX image automatically substitutes variables in .template files using envsubst
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Copy the compiled static assets from the build stage to NGINX's serve directory
-COPY --from=build /app/dist /usr/share/nginx/html
+# Install production dependencies
+RUN npm ci --omit=dev
+
+# Copy the compiled static assets and server bundle from the build stage
+COPY --from=build /app/dist ./dist
 
 # Expose the configured port
 EXPOSE $PORT
 
-# Start NGINX
-CMD ["nginx", "-g", "daemon off;"]
+# Start Node server
+CMD ["node", "dist/server.cjs"]

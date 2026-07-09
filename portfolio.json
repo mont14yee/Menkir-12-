@@ -303,38 +303,6 @@
           ],
           "image_prompt": "A dramatic photograph of a floating solar farm during a storm. The sky is overcast and the water has large, choppy waves, highlighting the harsh environmental conditions the system must endure.",
           "image": "/images/fpv_slide7_1779040239146.webp"
-        },
-        {
-          "layout": "content_right",
-          "title": "Maintenance & Longevity",
-          "content": [
-            "Designed for a 25+ year lifespan.",
-            "Requires specialized maintenance protocols.",
-            "Regular inspections of mooring lines, floats, and electrical connections are crucial.",
-            "Routine panel cleaning is necessary to maintain peak efficiency."
-          ],
-          "image_prompt": "A photograph of a maintenance crew on a small boat working on a floating solar array. They are performing inspections with specialized tools, conveying professionalism and care.",
-          "image": "/images/fpv_slide8_1779040259010.webp"
-        },
-        {
-          "layout": "full_image",
-          "title": "The Future is Bright (and Blue)",
-          "content": [
-            "Rapidly growing global market.",
-            "Ideal for co-location with hydroelectric dams.",
-            "Innovations are continuously reducing costs.",
-            "A key player in the clean energy transition."
-          ],
-          "image_prompt": "A futuristic concept image of a massive floating solar farm seamlessly integrated with a hydroelectric dam. In the background, a clean, thriving city and futuristic transport can be seen. The atmosphere is optimistic and high-tech.",
-          "image": "/images/fpv_slide9_1779040274805.webp"
-        },
-        {
-          "layout": "title",
-          "title": "Thank You",
-          "subtitle": "Questions & Discussion",
-          "content": "",
-          "image_prompt": "A simple, elegant, and minimalist image of a single solar panel floating on perfectly calm water that reflects a clear blue sky. A sense of peace and potential.",
-          "image": "/images/fpv_slide10_1779040290433.webp"
         }
       ]
     },
