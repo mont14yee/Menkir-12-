@@ -1396,7 +1396,7 @@ const ParallaxHero = ({ data }: { data: PortfolioData }) => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
             <div className="relative z-10">
-                <h1 className="netflix-sans text-6xl md:text-9xl text-red-600 font-extrabold tracking-wider" style={{ textShadow: '0 0 15px rgba(0,0,0,0.7)' }}>
+                <h1 className="netflix-sans text-4xl md:text-6xl text-red-600 font-extrabold tracking-wider" style={{ textShadow: '0 0 15px rgba(0,0,0,0.7)' }}>
                     {data.hero.title}
                 </h1>
                 <div className="mt-4 space-y-3">
