@@ -2082,13 +2082,6 @@ export const FeatureContent = [
         icon: <SelfCareIcon />,
     },
     {
-        id: 'yearly-goals-doorway',
-        title: "Yearly Goals Doorway",
-        description: "Tired of scattered goals? Bring your ambitions together in one place. Just drag your main goals into the observatory, and our AI will help you build a clear, powerful plan for the year.",
-        visual: <YearlyGoalsVisual />,
-        icon: <GoalIcon />,
-    },
-    {
         id: 'master-timeline-portal',
         title: "Master Timeline Portal",
         description: "See your whole year come to life. Our living timeline intelligently organizes your goals, projects, and personal milestones, helping you see how everything fits together.",

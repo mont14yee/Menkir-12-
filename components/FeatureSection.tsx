@@ -9,10 +9,7 @@ interface FeatureSectionProps {
 }
 
 export const FeatureSection = forwardRef<HTMLElement, FeatureSectionProps>(({ title, description, children, id }, ref) => {
-    // Add a specific class for the first feature section for the observatory animation
-    const sectionClasses = id === 'yearly-goals-doorway' 
-        ? "container mx-auto px-6 py-20 md:py-32 scroll-reveal observatory-reveal"
-        : "container mx-auto px-6 py-20 md:py-32 scroll-reveal";
+    const sectionClasses = "container mx-auto px-6 py-20 md:py-32 scroll-reveal";
 
     return (
         <section id={id} ref={ref} className={sectionClasses}>

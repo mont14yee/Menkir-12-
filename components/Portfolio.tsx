@@ -1650,7 +1650,17 @@ export const Portfolio: React.FC<{
                         <>
                             {filteredData.projects.length > 0 && (
                                 <ContentRow title="Project Results">
-                                    {filteredData.projects.map(project => <Thumbnail key={project.id} item={project} onClick={() => setSelectedProject(project)} />)}
+                                                                        {filteredData.projects.map(project => <Thumbnail key={project.id} item={project} onClick={() => {
+                                        if (project.id === 'proj9') {
+                                            setView('main');
+                                        } else if (project.id === 'proj-coastal') {
+                                            setView('design');
+                                        } else if (project.id === 'proj-fluid') {
+                                            setView('interface');
+                                        } else {
+                                            setSelectedProject(project);
+                                        }
+                                    }} />)}
                                 </ContentRow>
                             )}
                              {filteredData.designs.length > 0 && (
@@ -1690,9 +1700,13 @@ export const Portfolio: React.FC<{
                     <>
                         <div id="featured-presentations">
                             <ContentRow title={<span className="flex items-center gap-2">Featured Presentations <SparklesIcon className="w-5 h-5 text-red-600" /></span>}>
-                                {featuredProjects.map(project => <Thumbnail key={project.id} item={project} onClick={() => {
+                                                                {featuredProjects.map(project => <Thumbnail key={project.id} item={project} onClick={() => {
                                     if (project.id === 'proj9') {
                                         setView('main');
+                                    } else if (project.id === 'proj-coastal') {
+                                        setView('design');
+                                    } else if (project.id === 'proj-fluid') {
+                                        setView('interface');
                                     } else {
                                         setSelectedProject(project);
                                     }
