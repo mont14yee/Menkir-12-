@@ -7,6 +7,8 @@ import { Hero } from './components/Hero';
 import { FeatureSection } from './components/FeatureSection';
 import { FinalCTA } from './components/FinalCTA';
 import { Portfolio } from './components/Portfolio';
+import { DownloadModal } from './components/DownloadModal';
+
 const InterfaceView = lazy(() => import('./components/InterfaceView').then(m => ({ default: m.InterfaceView })));
 const DesignView = lazy(() => import('./components/DesignView').then(m => ({ default: m.DesignView })));
 const PhotosView = lazy(() => import('./components/PhotosView').then(m => ({ default: m.PhotosView })));
@@ -303,6 +305,7 @@ const App: React.FC = () => {
         <SearchProvider>
             <Router>
                 <AppContent />
+                <DownloadModal />
             </Router>
         </SearchProvider>
         </CurrencyProvider>

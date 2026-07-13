@@ -1,3 +1,4 @@
+import portfolioData from '../portfolio.json';
 import React, { useState, useEffect, useRef, MouseEvent, useMemo, useCallback } from 'react';
 import type { PortfolioData, Project, Blog, ConnectLink, Design, Video, View, Slide } from '../types';
 import { EmailIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon, ArrowPathIcon, SparklesIcon } from './IconComponents';
@@ -1428,7 +1429,7 @@ export const Portfolio: React.FC<{
     const [projectPosterState, setProjectPosterState] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        fetch('/portfolio.json')
+        Promise.resolve({ json: () => Promise.resolve(portfolioData) })
             .then(res => res.json())
             .then(data => {
                 setData(data);

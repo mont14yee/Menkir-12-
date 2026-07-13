@@ -1,3 +1,4 @@
+import portfolioData from '../portfolio.json';
 import React, { useState, useEffect, useRef } from 'react';
 import { NeuralNetworkIcon, PaletteIcon, TrophyIcon } from './IconComponents';
 
@@ -8,16 +9,7 @@ export const Hero: React.FC = () => {
     const [isPaused, setIsPaused] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
 
-    useEffect(() => {
-        fetch('/portfolio.json')
-            .then(res => res.json())
-            .then(data => {
-                if (data.hero) {
-                    setHeroData(data.hero);
-                }
-            })
-            .catch(err => console.error("Failed to load hero data:", err));
-    }, []);
+    useEffect(() => { setHeroData((portfolioData as any).hero); }, []);
 
     useEffect(() => {
         let isVisible = true;

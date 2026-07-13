@@ -427,7 +427,7 @@ export const DesignView: React.FC = () => {
                         <div className="text-center lg:text-right flex flex-col items-center lg:items-end">
                             <h3 className="text-3xl font-bold mb-6">Ready to build the future?</h3>
                             <p className="text-slate-400 mb-10 max-w-md">The Coastal Trumpet Interchange represents the pinnacle of modern civil engineering, balancing capacity, cost, and climate resilience.</p>
-                            <button className="bg-white text-black hover:bg-slate-200 px-10 py-4 rounded-full font-bold transition-colors flex items-center gap-2 text-lg">
+                            <button onClick={() => window.dispatchEvent(new CustomEvent('open-download-modal'))} className="bg-white text-black hover:bg-slate-200 px-10 py-4 rounded-full font-bold transition-colors flex items-center gap-2 text-lg">
                                 Download Full Design <ArrowRight className="w-5 h-5" />
                             </button>
                         </div>

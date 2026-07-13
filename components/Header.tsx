@@ -1,3 +1,4 @@
+import portfolioData from '../portfolio.json';
 
 import React, { useState, useEffect, useRef, DragEvent, FC, MouseEvent, ChangeEvent } from 'react';
 import { GearIcon, CheckCircleIcon, HammerWandIcon, MapPinIcon, GlobeAltIcon, ArrowLongRightIcon, EnvelopeIcon, HeartIcon, UsersIcon, ArrowPathIcon, SparklesIcon, MenuIcon, CloseIcon, SearchIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon } from './IconComponents';
@@ -47,13 +48,8 @@ const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }
     const activeSeasonClass = seasonalClasses[season];
 
     useEffect(() => {
-        fetch('/portfolio.json')
-            .then(res => res.json())
-            .then(data => {
-                setProfileData(data.profile);
-                setProfilePic(data.profile.pictureUrl);
-            })
-            .catch(err => console.error("Failed to load profile data:", err));
+        setProfileData((portfolioData as any).profile);
+        setProfilePic((portfolioData as any).profile.pictureUrl);
     }, []);
 
     useEffect(() => {
@@ -308,16 +304,11 @@ export const Header: React.FC<{
     };
 
     useEffect(() => {
-        fetch('/portfolio.json')
-            .then(res => res.json())
-            .then(data => {
-                const socials = data.connect.filter((c: ConnectLink) => ['instagram', 'linkedin', 'telegram', 'youtube', 'tiktok'].includes(c.id));
-                setConnectLinks(socials);
-                if (data.profile && data.profile.pictureUrl) {
-                    setProfilePic(data.profile.pictureUrl);
-                }
-            })
-            .catch(err => console.error("Failed to load connect links:", err));
+        const socials = (portfolioData as any).connect.filter((c: ConnectLink) => ['instagram', 'linkedin', 'telegram', 'youtube', 'tiktok'].includes(c.id));
+        setConnectLinks(socials);
+        if ((portfolioData as any).profile && (portfolioData as any).profile.pictureUrl) {
+            setProfilePic((portfolioData as any).profile.pictureUrl);
+        }
 
         const handleClickOutside = (event: globalThis.MouseEvent) => {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
