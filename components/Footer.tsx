@@ -1,11 +1,11 @@
-import portfolioData from '../portfolio.json';
+import { usePortfolioData } from './PortfolioDataProvider';
 import React, { useState, useEffect } from 'react';
 import { AppStoreIcon, PlayStoreIcon, InstagramIcon, LinkedInIcon, EmailIcon, TelegramIcon, YouTubeIcon, TikTokIcon } from './IconComponents';
 
-export const Footer: React.FC<{ variant?: 'app' | 'portfolio' }> = ({ variant = 'app' }) => {
+export const Footer: React.FC<{ variant?: 'app' | 'portfolio' }> = ({ variant = 'app' }) => { const portfolioData = usePortfolioData();
     const [footerData, setFooterData] = useState<any>(null);
 
-    useEffect(() => { setFooterData((portfolioData as any).footer); }, []);
+    useEffect(() => { if(portfolioData) setFooterData((portfolioData as any).footer); }, [portfolioData]);
     
     if (variant === 'portfolio') {
         return (

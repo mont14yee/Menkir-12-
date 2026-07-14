@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useContext, createContext, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
+import { PortfolioDataProvider } from './components/PortfolioDataProvider';
 import { Footer } from './components/Footer';
 import { Hero } from './components/Hero';
 import { FeatureSection } from './components/FeatureSection';
@@ -303,10 +304,12 @@ const App: React.FC = () => {
         <GoalsProvider>
         <CurrencyProvider>
         <SearchProvider>
-            <Router>
-                <AppContent />
-                <DownloadModal />
-            </Router>
+            <PortfolioDataProvider>
+                <Router>
+                    <AppContent />
+                    <DownloadModal />
+                </Router>
+            </PortfolioDataProvider>
         </SearchProvider>
         </CurrencyProvider>
         </GoalsProvider>

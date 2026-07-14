@@ -1,4 +1,4 @@
-import portfolioData from '../portfolio.json';
+import { usePortfolioData } from './PortfolioDataProvider';
 import React, { useState, useEffect, useRef, MouseEvent, useMemo, useCallback } from 'react';
 import type { PortfolioData, Project, Blog, ConnectLink, Design, Video, View, Slide } from '../types';
 import { EmailIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon, ArrowPathIcon, SparklesIcon } from './IconComponents';
@@ -1413,6 +1413,7 @@ const ParallaxHero = ({ data }: { data: PortfolioData }) => {
 export const Portfolio: React.FC<{
     setView: (view: View) => void;
 }> = ({ setView }) => {
+    const portfolioData = usePortfolioData();
     const { searchQuery } = useSearch();
     const [data, setData] = useState<PortfolioData | null>(null);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -1428,18 +1429,7 @@ export const Portfolio: React.FC<{
     const [projectGalleryState, setProjectGalleryState] = useState<Record<string, string[]>>({});
     const [projectPosterState, setProjectPosterState] = useState<Record<string, string>>({});
 
-    useEffect(() => {
-        Promise.resolve({ json: () => Promise.resolve(portfolioData) })
-            .then(res => res.json())
-            .then(data => {
-                setData(data);
-                const initialStates: Record<string, VideoGenerationState> = {};
-                data.videos.forEach((v: Video) => {
-                    initialStates[v.id] = { status: 'idle' };
-                });
-                setVideoStates(initialStates);
-            })
-            .catch(err => console.error("Failed to load portfolio data:", err));
+    useEffect(() => { if (portfolioData) { setData(portfolioData as any); const initialStates: Record<string, VideoGenerationState> = {}; (portfolioData as any).videos.forEach((v: Video) => { initialStates[v.id] = { status: 'idle' }; }); setVideoStates(initialStates); }
 
         const originalTitle = document.title;
         const originalDescription = document.querySelector('meta[name="description"]');
@@ -1464,7 +1454,7 @@ export const Portfolio: React.FC<{
                  document.head.appendChild(restoredMeta);
             }
         };
-    }, []);
+    }, [portfolioData]);
 
     const handleUpdateProjectMedia = (projectId: string, index: number, file: File) => {
         const reader = new FileReader();

@@ -1,15 +1,15 @@
-import portfolioData from '../portfolio.json';
+import { usePortfolioData } from './PortfolioDataProvider';
 import React, { useState, useEffect, useRef } from 'react';
 import { NeuralNetworkIcon, PaletteIcon, TrophyIcon } from './IconComponents';
 
-export const Hero: React.FC = () => {
+export const Hero: React.FC = () => { const portfolioData = usePortfolioData();
     const [isSparkVisible, setIsSparkVisible] = useState(false);
     const [goal, setGoal] = useState('');
     const [heroData, setHeroData] = useState<any>(null);
     const [isPaused, setIsPaused] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
 
-    useEffect(() => { setHeroData((portfolioData as any).hero); }, []);
+    useEffect(() => { if(portfolioData) setHeroData((portfolioData as any).hero); }, [portfolioData]);
 
     useEffect(() => {
         let isVisible = true;

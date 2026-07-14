@@ -1,4 +1,4 @@
-import portfolioData from '../portfolio.json';
+import { usePortfolioData } from './PortfolioDataProvider';
 
 import React, { useState, useEffect, useRef, DragEvent, FC, MouseEvent, ChangeEvent } from 'react';
 import { GearIcon, CheckCircleIcon, HammerWandIcon, MapPinIcon, GlobeAltIcon, ArrowLongRightIcon, EnvelopeIcon, HeartIcon, UsersIcon, ArrowPathIcon, SparklesIcon, MenuIcon, CloseIcon, SearchIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon } from './IconComponents';
@@ -32,7 +32,7 @@ const useCountUp = (end: number, duration = 1500) => {
 };
 
 // --- Profile Modal Component ---
-const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }> = ({ isOpen, onClose, season }) => {
+const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }> = ({ isOpen, onClose, season }) => { const portfolioData = usePortfolioData();
     const [profileData, setProfileData] = useState<ProfileData | null>(null);
     const [profilePic, setProfilePic] = useState<string>('');
     const [introState, setIntroState] = useState<'hidden' | 'gears' | 'blueprint' | 'content'>('hidden');
@@ -47,10 +47,7 @@ const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }
     };
     const activeSeasonClass = seasonalClasses[season];
 
-    useEffect(() => {
-        setProfileData((portfolioData as any).profile);
-        setProfilePic((portfolioData as any).profile.pictureUrl);
-    }, []);
+    useEffect(() => { if (portfolioData) { setProfileData((portfolioData as any).profile); setProfilePic((portfolioData as any).profile.pictureUrl); } }, [portfolioData]);
 
     useEffect(() => {
         if (isOpen) {
@@ -276,10 +273,7 @@ const SidebarLink: FC<{ href?: string; onClick?: () => void; children: React.Rea
 
 
 // --- Header Component ---
-export const Header: React.FC<{ 
-    setView: (view: View) => void, 
-    season: Season 
-}> = ({ setView, season }) => {
+export const Header: React.FC<{ setView: (view: View) => void, season: Season }> = ({ setView, season }) => { const portfolioData = usePortfolioData();
     const { searchQuery, setSearchQuery } = useSearch();
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
@@ -304,11 +298,8 @@ export const Header: React.FC<{
     };
 
     useEffect(() => {
-        const socials = (portfolioData as any).connect.filter((c: ConnectLink) => ['instagram', 'linkedin', 'telegram', 'youtube', 'tiktok'].includes(c.id));
-        setConnectLinks(socials);
-        if ((portfolioData as any).profile && (portfolioData as any).profile.pictureUrl) {
-            setProfilePic((portfolioData as any).profile.pictureUrl);
-        }
+        if (portfolioData) {
+            const socials = (portfolioData as any).connect.filter((c: ConnectLink) => ['instagram', 'linkedin', 'telegram', 'youtube', 'tiktok'].includes(c.id)); setConnectLinks(socials); if ((portfolioData as any).profile && (portfolioData as any).profile.pictureUrl) { setProfilePic((portfolioData as any).profile.pictureUrl); } }
 
         const handleClickOutside = (event: globalThis.MouseEvent) => {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
