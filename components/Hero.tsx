@@ -58,7 +58,7 @@ export const Hero: React.FC = () => { const portfolioData = usePortfolioData();
             
             <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-4 animate-hologram">
-                    {heroData?.title || 'THE FUTURE'}<span className="text-slate-400">: {heroData?.subtitle || 'Your Future, Designed.'}</span>
+                    Ultimate Development Plan<span className="text-slate-400">: ANNUAL TEMPLATE</span>
                 </h1>
                 <p className="text-lg md:text-xl max-w-3xl mx-auto text-slate-300 leading-relaxed mb-10 animate-fade-in-up">
                     {heroData?.description || 'Move beyond planning. Architect a year of purpose, achievement, and growth.'}

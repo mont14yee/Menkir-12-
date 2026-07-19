@@ -58,7 +58,7 @@ export const Footer: React.FC<{ variant?: 'app' | 'portfolio' }> = ({ variant = 
 
 
                 <div className="text-center text-slate-500 text-sm">
-                    <p>&copy; {new Date().getFullYear()} {footerData?.copyright || 'THE FUTURE. All rights reserved.'}</p>
+                    <p>&copy; {new Date().getFullYear()} Ultimate Development Plan. All rights reserved.</p>
                     <div className="mt-2 space-x-4">
                         <a href="#" className="hover:text-slate-300">Privacy Policy</a>
                         <span>&middot;</span>

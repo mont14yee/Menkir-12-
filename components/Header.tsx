@@ -347,12 +347,6 @@ export const Header: React.FC<{ setView: (view: View) => void, season: Season }>
                         >
                             Photos
                         </button>
-                        <button 
-                            onClick={() => setView('resume')}
-                            className="relative px-4 py-1.5 text-sm font-bold rounded-full transition-all duration-300 border text-slate-400 hover:text-slate-200 border-slate-800 bg-slate-900/50 hover:bg-slate-800"
-                        >
-                            Resume
-                        </button>
                     </nav>
                 </div>
 
@@ -480,13 +474,6 @@ export const Header: React.FC<{ setView: (view: View) => void, season: Season }>
                             <SidebarLink onClick={() => { setSearchQuery('Street'); toggleSidebar(); }}>Street</SidebarLink>
                             <SidebarLink onClick={() => { setSearchQuery('Savanna'); toggleSidebar(); }}>Savanna</SidebarLink>
                             <SidebarLink onClick={() => { setSearchQuery('Abstract'); toggleSidebar(); }}>Abstract</SidebarLink>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 className="py-2 text-sm font-semibold text-slate-500 uppercase tracking-wider">Resume</h3>
-                        <div className="pl-4 border-l-2 border-slate-700">
-                            <SidebarLink onClick={() => { setView('resume'); toggleSidebar(); }}>View Resume</SidebarLink>
                         </div>
                     </div>
 

@@ -1233,7 +1233,7 @@ const VideoThumbnail: React.FC<{
     return (
         <div 
             onClick={state.status === 'ready' ? onPlay : undefined}
-            className={`video-thumbnail relative group flex-shrink-0 bg-slate-900 rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-lg 
+            className={`w-40 md:w-56 aspect-[2/3] relative group flex-shrink-0 bg-slate-900 rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-lg 
                 ${state.status === 'ready' ? 'cursor-pointer hover:scale-110 hover:z-20 hover:shadow-red-600/50' : ''}`}
             aria-label={`Video: ${item.title}. Status: ${state.status}`}
         >
@@ -1627,6 +1627,7 @@ export const Portfolio: React.FC<{
                 <div className="px-4 md:px-12 mb-8 max-w-3xl">
                     <div className="flex flex-wrap items-center gap-4 mt-6">
                         <a href="mailto:mon14ye@gmail.com" className="bg-red-600 text-white font-bold py-3 px-8 rounded shadow-lg hover:bg-red-700 transition-colors uppercase">CONTACT ME</a>
+                        <button onClick={() => setView('resume')} className="bg-red-600 text-white font-bold py-3 px-8 rounded shadow-lg hover:bg-red-700 transition-colors uppercase">RESUME</button>
                         <a href="https://t.me/frontenddesigns" target="_blank" rel="noopener noreferrer" className="bg-red-600 text-white font-bold py-3 px-8 rounded shadow-lg hover:bg-red-700 transition-colors uppercase">FRONTEND DESIGN</a>
                     </div>
                 </div>

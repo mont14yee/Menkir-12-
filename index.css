@@ -646,8 +646,8 @@ body {
       }
 
       .design-card {
-        aspect-ratio: 9 / 16;
-        width: 160px;
+        aspect-ratio: 2 / 3;
+        width: 14rem;
         flex-shrink: 0;
         border-radius: 0.75rem;
         overflow: hidden;
@@ -810,15 +810,6 @@ body {
         animation: modal-content-enter 0.3s forwards;
       }
       
-      .video-thumbnail {
-        aspect-ratio: 9 / 16;
-        width: 144px;
-      }
-      @media (min-width: 768px) {
-        .video-thumbnail {
-          width: 160px;
-        }
-      }
 
       .reel-viewer-modal {
         position: fixed;
