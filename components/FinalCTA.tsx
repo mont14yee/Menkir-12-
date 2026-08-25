@@ -1,17 +1,33 @@
 import React, { forwardRef } from 'react';
 import { ArrowRight } from './ExtractedIcons';
+import { motion } from 'motion/react';
 
 export const FinalCTA = forwardRef<HTMLElement>((props, ref) => {
     return (
-        <section ref={ref} className="py-24 bg-gray-900/30 scroll-reveal">
-            <div className="container mx-auto px-6 text-center flex justify-center">
-                <button onClick={() => window.dispatchEvent(new CustomEvent('open-download-modal'))} className="group inline-flex items-center gap-6 transition-all hover:scale-105 cursor-pointer bg-transparent border-none outline-none">
-                    <h2 className="text-4xl md:text-6xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 group-hover:from-white group-hover:to-white transition-all m-0 p-0">
+        <section ref={ref} className="h-[100vh] flex items-center justify-center relative overflow-hidden">
+            {/* Ambient subtle glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-zinc-800/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen opacity-50"></div>
+            
+            <motion.div
+                initial={{ opacity: 0, filter: 'blur(20px)' }}
+                whileInView={{ opacity: 1, filter: 'blur(0px)' }}
+                viewport={{ once: false, margin: "-10%" }}
+                transition={{ duration: 4, ease: "easeOut" }}
+                className="flex flex-col items-center group relative z-10 w-full"
+            >
+                <button 
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-download-modal'))} 
+                    className="flex flex-col items-center justify-center gap-12 bg-transparent border-none outline-none cursor-pointer w-full"
+                >
+                    <div className="text-[10px] md:text-xs tracking-[0.4em] text-zinc-600 uppercase transition-all duration-3000 group-hover:text-zinc-300 group-hover:tracking-[0.8em]">
                         Download Full Design
-                    </h2>
-                    <ArrowRight className="w-10 h-10 md:w-12 md:h-12 text-slate-400 group-hover:text-white transition-colors" />
+                    </div>
+                    
+                    <div className="w-[1px] h-32 bg-gradient-to-b from-transparent via-zinc-800 to-transparent transition-all duration-2000 group-hover:via-zinc-500 group-hover:h-40"></div>
+                    
+                    <ArrowRight className="w-6 h-6 text-zinc-700 group-hover:text-zinc-400 group-hover:translate-y-4 transition-all duration-1000" />
                 </button>
-            </div>
+            </motion.div>
         </section>
     );
 });

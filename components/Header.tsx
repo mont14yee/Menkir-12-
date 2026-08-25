@@ -1,10 +1,9 @@
 import { usePortfolioData } from './PortfolioDataProvider';
 
 import React, { useState, useEffect, useRef, DragEvent, FC, MouseEvent, ChangeEvent } from 'react';
-import { GearIcon, CheckCircleIcon, HammerWandIcon, MapPinIcon, GlobeAltIcon, ArrowLongRightIcon, EnvelopeIcon, HeartIcon, UsersIcon, ArrowPathIcon, SparklesIcon, MenuIcon, CloseIcon, SearchIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon } from './IconComponents';
+import { GearIcon, CheckCircleIcon, HammerWandIcon, MapPinIcon, GlobeAltIcon, ArrowLongRightIcon, EnvelopeIcon, HeartIcon, UsersIcon, ArrowPathIcon, SparklesIcon, MenuIcon, CloseIcon, InstagramIcon, LinkedInIcon, TelegramIcon, YouTubeIcon, TikTokIcon } from './IconComponents';
 import type { View, ProfileData, ConnectLink } from '../types';
 import { Season } from '../types';
-import { useSearch } from '../App';
 
 // --- Custom Hooks ---
 const useCountUp = (end: number, duration = 1500) => {
@@ -274,8 +273,7 @@ const SidebarLink: FC<{ href?: string; onClick?: () => void; children: React.Rea
 
 // --- Header Component ---
 export const Header: React.FC<{ setView: (view: View) => void, season: Season }> = ({ setView, season }) => { const portfolioData = usePortfolioData();
-    const { searchQuery, setSearchQuery } = useSearch();
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+        const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
     const [connectLinks, setConnectLinks] = useState<ConnectLink[]>([]);
     const [profilePic, setProfilePic] = useState<string>('');
@@ -313,26 +311,6 @@ export const Header: React.FC<{ setView: (view: View) => void, season: Season }>
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
     const toggleSettings = () => setSettingsModalOpen(!isSettingsModalOpen);
     
-    const SearchBar = () => (
-        <div className="flex items-center gap-2 bg-slate-800 md:bg-black/30 border border-slate-700 rounded transition-all duration-300 focus-within:border-slate-500 focus-within:bg-black/50 w-full">
-            <span className="pl-3 text-slate-500">
-                <SearchIcon className="w-4 h-4" />
-            </span>
-            <input
-                type="text"
-                placeholder="Search titles, tags..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent text-white placeholder-slate-500 py-1.5 px-2 text-sm focus:outline-none w-full"
-            />
-            {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="pr-3 text-slate-500 hover:text-white">
-                    <CloseIcon className="w-4 h-4" />
-                </button>
-            )}
-        </div>
-    );
-    
     return (
         <>
             <header className="fixed top-0 left-0 right-0 z-40 p-6 flex justify-between items-center gap-4 backdrop-blur-md bg-black/40 border-b border-white/10 transition-all duration-300">
@@ -340,20 +318,17 @@ export const Header: React.FC<{ setView: (view: View) => void, season: Season }>
                     <div className="text-2xl font-black tracking-tighter text-red-600 netflix-sans flex-shrink-0" onClick={() => setView('portfolio')} style={{cursor: 'pointer'}}>
                         MW
                     </div>
-                     <nav className="hidden md:flex items-center gap-3">
-                        <button 
-                            onClick={() => setView('photos')}
-                            className="relative px-4 py-1.5 text-sm font-bold rounded-full transition-all duration-300 border text-slate-400 hover:text-slate-200 border-slate-800 bg-slate-900/50 hover:bg-slate-800"
-                        >
-                            Photos
-                        </button>
-                    </nav>
-                </div>
-
+                     </div>
+                <nav className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center gap-3">
+                    <button 
+                        onClick={() => setView('photos')}
+                        className="relative px-4 py-1.5 text-sm font-bold rounded-full transition-all duration-300 border text-slate-400 hover:text-slate-200 border-slate-800 bg-slate-900/50 hover:bg-slate-800"
+                    >
+                        Natural
+                    </button>
+                </nav>
                 <div className="flex items-center space-x-4">
-                    <div className="hidden md:block w-52 lg:w-64">
-                        <SearchBar />
-                    </div>
+                    
                     <div className="hidden md:flex items-center space-x-3 border-r border-slate-700 pr-4">
                         {connectLinks.map(link => (
                             <a
@@ -462,19 +437,12 @@ export const Header: React.FC<{ setView: (view: View) => void, season: Season }>
                 <button onClick={toggleSidebar} className="absolute top-6 right-6 text-slate-400 hover:text-white">
                     <CloseIcon className="w-6 h-6" />
                 </button>
-                <div className="mt-12 md:hidden">
-                    <SearchBar />
-                </div>
+                
                 <nav className="mt-6 space-y-4">
 
 
                     <div>
-                        <h3 className="py-2 text-sm font-semibold text-slate-500 uppercase tracking-wider">Photos</h3>
-                        <div className="pl-4 border-l-2 border-slate-700">
-                            <SidebarLink onClick={() => { setSearchQuery('Street'); toggleSidebar(); }}>Street</SidebarLink>
-                            <SidebarLink onClick={() => { setSearchQuery('Savanna'); toggleSidebar(); }}>Savanna</SidebarLink>
-                            <SidebarLink onClick={() => { setSearchQuery('Abstract'); toggleSidebar(); }}>Abstract</SidebarLink>
-                        </div>
+                        <SidebarLink onClick={() => { setView('photos'); toggleSidebar(); }}>Natural</SidebarLink>
                     </div>
 
                     <div className="flex justify-center items-center space-x-6 pt-8">

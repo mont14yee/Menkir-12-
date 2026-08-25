@@ -1,26 +1,22 @@
 const fs = require('fs');
-let code = fs.readFileSync('components/Header.tsx', 'utf8');
+let header = fs.readFileSync('components/Header.tsx', 'utf8');
 
-code = code.replace("import portfolioData from '../portfolio.json';", "import { usePortfolioData } from './PortfolioDataProvider';");
+// Remove SearchBar definition
+header = header.replace(/const SearchBar = \(\) => \([\s\S]*?\n    \);\s*/, '');
 
-code = code.replace(
-    /const ProfileModal: FC<\\{ isOpen: boolean; onClose: \\(\\) => void; season: Season; \\}> = \\(\\{ isOpen, onClose, season \\}\\) => \\{\\s*const \\[profileData, setProfileData\\] = useState<ProfileData \\| null>\\(null\\);/m,
-    "const ProfileModal: FC<{ isOpen: boolean; onClose: () => void; season: Season; }> = ({ isOpen, onClose, season }) => {\n    const portfolioData = usePortfolioData();\n    const [profileData, setProfileData] = useState<ProfileData | null>(null);"
-);
+// Remove useSearch destructuring
+header = header.replace(/const { searchQuery, setSearchQuery } = useSearch\(\);\n/, '');
 
-code = code.replace(
-    /useEffect\\(\\(\\) => \\{\\s*setProfileData\\(\\(portfolioData as any\\)\\.profile\\);\\s*setProfilePic\\(\\(portfolioData as any\\)\\.profile\\.pictureUrl\\);\\s*\\}, \\[\\]\\);/m,
-    "useEffect(() => { if (portfolioData) { setProfileData((portfolioData as any).profile); setProfilePic((portfolioData as any).profile.pictureUrl); } }, [portfolioData]);"
-);
+// Remove useSearch import
+header = header.replace(/import { useSearch } from '\.\.\/App';\n/, '');
 
-code = code.replace(
-    /export const Header: React\\.FC<HeaderProps> = \\(\\{ setView, season \\}\\) => \\{\\s*const \\[isProfileOpen, setIsProfileOpen\\] = useState\\(false\\);/m,
-    "export const Header: React.FC<HeaderProps> = ({ setView, season }) => {\n    const portfolioData = usePortfolioData();\n    const [isProfileOpen, setIsProfileOpen] = useState(false);"
-);
+// Remove SearchIcon import
+header = header.replace(/SearchIcon,\s*/, '');
 
-code = code.replace(
-    /useEffect\\(\\(\\) => \\{\\s*const socials = \\(portfolioData as any\\)\\.connect\\.filter\\(\\(c: ConnectLink\\) => \\['instagram', 'linkedin', 'telegram', 'youtube', 'tiktok'\\]\\.includes\\(c\\.id\\)\\);\\s*setConnectLinks\\(socials\\);\\s*if \\(\\(portfolioData as any\\)\\.profile && \\(portfolioData as any\\)\\.profile\\.pictureUrl\\) \\{\\s*setProfilePic\\(\\(portfolioData as any\\)\\.profile\\.pictureUrl\\);\\s*\\}\\s*\\}, \\[\\]\\);/m,
-    "useEffect(() => { if (portfolioData) { const socials = (portfolioData as any).connect.filter((c: ConnectLink) => ['instagram', 'linkedin', 'telegram', 'youtube', 'tiktok'].includes(c.id)); setConnectLinks(socials); if ((portfolioData as any).profile && (portfolioData as any).profile.pictureUrl) { setProfilePic((portfolioData as any).profile.pictureUrl); } } }, [portfolioData]);"
-);
+// Remove desktop SearchBar container
+header = header.replace(/<div className="hidden md:block w-52 lg:w-64">\s*<SearchBar \/>\s*<\/div>/, '');
 
-fs.writeFileSync('components/Header.tsx', code);
+// Remove mobile SearchBar container
+header = header.replace(/<div className="mt-12 md:hidden">\s*<SearchBar \/>\s*<\/div>/, '');
+
+fs.writeFileSync('components/Header.tsx', header);
